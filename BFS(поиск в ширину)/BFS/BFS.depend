@@ -1,0 +1,20 @@
+# depslib dependency file v1.0
+1574171255 source:d:\УЧЁБА\Алгоритмы\bfs(поиск в ширину)\bfs\fifo.cpp
+	<iostream>
+	"fifo.h"
+	"punkt.h"
+
+1573935014 d:\УЧЁБА\Алгоритмы\bfs(поиск в ширину)\bfs\fifo.h
+	"punkt.h"
+
+1574107358 source:d:\УЧЁБА\Алгоритмы\bfs(поиск в ширину)\bfs\main.cpp
+	<iostream>
+	"fifo.h"
+	"punkt.h"
+
+1574105549 d:\УЧЁБА\Алгоритмы\bfs(поиск в ширину)\bfs\punkt.h
+	<iostream>
+
+1573847932 source:d:\УЧЁБА\Алгоритмы\bfs(поиск в ширину)\bfs\punkt.cpp
+	"punkt.h"
+
