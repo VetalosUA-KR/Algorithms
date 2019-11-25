@@ -31,6 +31,8 @@ int countSize(int s)
     }
     return k-1;
 }
+
+
 void createSequence(int arr[], int size)
 {
     int rez = 1;
@@ -42,6 +44,59 @@ void createSequence(int arr[], int size)
         k++;
     }
 }
+/********************************************////     4^r+3*2^(k-1)+1
+void createSequence2(int arr[], int size)
+{
+    int rez = 1;
+    int k = 1;
+    while(rez < size)
+    {
+        arr[k-1] = rez;
+         rez = pow(4, k) + 3 * pow(2,k-1) + 1;
+        k++;
+    }
+}
+int countSize2(int s)
+{
+    int rez = 1;
+    int k = 1;
+    while(rez < s)
+    {
+        //cout<<rez<<" ";
+        rez = pow(4, k) + 3 * pow(2,k-1) + 1;
+        k++;
+    }
+    return k-1;
+}
+////////////////////////////////////////////////////////////////////
+
+/********************************************////     1,8 * 2,25^(k-1) - 0,8
+void createSequence3(int arr[], int size)
+{
+    int rez = 1;
+    int k = 1;
+    while(rez < size)
+    {
+        rez = ceil(1.8 * pow(2.25, k-1) - 0.8);
+
+        arr[k-1] = rez;
+        k++;
+    }
+}
+int countSize3(int s)
+{
+    int rez = 1;
+    int k = 1;
+    while(rez < s)
+    {
+        cout<<rez<<" ";
+        rez = 1.8 * pow(2.25, k-1) - 0.8;
+        k++;
+    }
+    cout<<endl;
+    return k-1;
+}
+////////////////////////////////////////////////////////////////////
 
 void spreadArray(int arr[], int size)
 {
@@ -54,12 +109,12 @@ void spreadArray(int arr[], int size)
     }
 }
 
-//Рабочий вариант (Выклад)
-void shellsort(int a[], int l, int r)
+
+void shellsort3(int a[], int r)
 {
-    int sizeSequence = countSize(r);/// rachujemy dlugosc ciagu
+    int sizeSequence = countSize3(r);/// rachujemy dlugosc ciagu
     int arrSequence[sizeSequence];  /// tworzymy tablice potrzebnej dlugosci
-    createSequence(arrSequence, r); /// przypisujemy wartosci do tej tabeli
+    createSequence3(arrSequence, r); /// przypisujemy wartosci do tej tabeli
 
     cout<<"arr sequence        =   ";
     print(arrSequence, sizeSequence);
@@ -71,41 +126,6 @@ void shellsort(int a[], int l, int r)
     print(arrSequence, sizeSequence);
     cout<<endl;
 
-    int i, j, k, h;
-    int v;
-    for ( k = 0; k < sizeSequence; k++)
-    {
-        for (h = arrSequence[k], i = l+h; i <= r; i++) /// zamiast i <= r  trzeba i < r
-        {
-            v = a[i];
-            j = i;
-            while (j >= h && a[j-h] > v)
-            {
-                a[j] = a[j-h];
-                j -= h;
-            }
-            a[j] = v;
-        }
-    }
-}
-
-
-
-void shellsort3(int a[], int r)
-{
-    int sizeSequence = 1;/// rachujemy dlugosc ciagu
-    int arrSequence[sizeSequence] = {5};  /// tworzymy tablice potrzebnej dlugosci
-    //createSequence(arrSequence, r); /// przypisujemy wartosci do tej tabeli
-
-    cout<<"arr sequence        =   ";
-    print(arrSequence, sizeSequence);
-    cout<<endl;
-
-    //spreadArray(arrSequence, sizeSequence);
-
-    cout<<"spread arr sequence =   ";
-    print(arrSequence, sizeSequence);
-    cout<<endl;
 
     int i, j, k, h, l;
     int v;
@@ -126,58 +146,6 @@ void shellsort3(int a[], int r)
 
     }
 }
-
-
-
-void shellsort2(int a[], int l, int r)
-{
-    int i, j, k, h;
-    int v;
-    int incs[16] = { 1391376, 463792, 198768, 86961, 33936,
-                     13776, 4592, 1968, 861, 336,
-                     112, 48, 21, 7, 3, 1
-                   };
-    for ( k = 0; k < 16; k++)
-        for (h = incs[k], i = l+h; i < r; i++)
-        {
-            v = a[i];
-            j = i;
-            while (j >= h && a[j-h] > v)
-            {
-                a[j] = a[j-h];
-                j -= h;
-            }
-            a[j] = v;
-        }
-}
-
-//Вариант для тестов
-/*void shellsort(int a[], int r)
-{
-    int rightGapValue, leftGapValue, stepGap, gapValue;
-    int currentValue;
-    //в этом массиве хранятся значения на какие части будем делить основной массив
-    int arrGaps[16] = { 1391376, 463792, 198768, 86961, 33936, 13776, 4592, 1968, 861, 336, 112, 48, 21, 7, 3, 1 };
-    //проходим по всем значениям
-    for (stepGap = 0; stepGap < 16; stepGap++)
-    {
-        //если размер нашего массива меньше чем текущее значение из массива "делителей"
-        for (gapValue = arrGaps[stepGap], rightGapValue = arrGaps[stepGap]; rightGapValue <= r; rightGapValue++)
-        {
-            //сохраняем текущее значение из основного массива (при дилителе 4 сохраняем 5 значение)
-            currentValue = a[rightGapValue];
-            leftGapValue = rightGapValue;
-            //
-            while (leftGapValue >= gapValue && a[leftGapValue-gapValue] > currentValue)
-            {
-                a[leftGapValue] = a[leftGapValue-gapValue];
-                leftGapValue -= gapValue;
-            }
-            a[leftGapValue] = currentValue;
-        }
-    }
-}
-*/
 
 //Собственная реализация
 /*void shellsort(int arr[], int size, int arrK[], int sizeAK)
@@ -222,16 +190,16 @@ int main()
 {
     srand(time(0));
 
-    int size = 40;
+    int size = 400;
 
     //int arr[size]={1,1,98,3,21,15,64,3,9,98};
     int arr[size];
     createArray(arr, size);
-    print(arr, size);
+    ///print(arr, size);
     cout<<endl<<endl;
     shellsort3(arr, size);
     cout<<endl;
-    print(arr, size);
+    ///print(arr, size);
     cout<<endl;
 
 
