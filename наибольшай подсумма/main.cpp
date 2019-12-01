@@ -26,9 +26,9 @@ int main()
     srand(time(0));
 
     int size = 9;
-    int arr[size] = {-10 , 3 , -3 , 1, 3 , 4,  -3 , -16 , -8};
-    //int arr[size];
-    //createarr(arr,size);
+    //int arr[size] = {10 , 3 , -3 , 1, 3 , 4,  -3 , -16 , -8};
+    int arr[size];
+    createarr(arr,size);
     printArr(arr,size);
 
     int _start = 0;

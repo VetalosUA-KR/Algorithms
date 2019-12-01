@@ -1,4 +1,5 @@
 #include <iostream>
+#include <ctime>
 
 using namespace std;
 
@@ -13,22 +14,6 @@ struct Node
 //	void printInOrder(Node* root);
 };
 
-/*void Add(Node*& root, int k, Node * par)
-{
-	if (root == NULL)
-	{
-		root = new Node;
-		root->key = k;
-		root->left = NULL;
-		root->right = NULL;
-		root->parent = par;
-	}
-	else
-	{
-		if (root->key > k) Add(root->left, k, root);
-		else Add(root->right, k, root);
-	}
-}*/
 
 Node * Add(Node*& r, int k, Node * par)
 {
@@ -101,6 +86,7 @@ int wysokosc(Node * root)
 void deleteElement(Node *& r)
 {
     if(!r) return;
+    /// if deleted node has no children
     if(r->left == nullptr && r->right == nullptr)
     {
         if(r->parent->left = r) r->parent->left = nullptr;
@@ -108,6 +94,7 @@ void deleteElement(Node *& r)
         delete r;
         return;
     }
+    /// if deleted node have one children
     if(!r->left || !r->right)
     {
         Node * theOnlyChild = r->left;
@@ -118,23 +105,109 @@ void deleteElement(Node *& r)
         delete r;
         return;
     }
-    /*else
+    /// if deleted node have 2 children
+    else
     {
-        Node * nas =
-    }*/
+        Node * nast = nastepnik(r);
+
+        if(nast->parent->left == nast)nast->parent->left = nast->right;
+        else nast->parent->right = nast->right;
+        if(nast->right) nast->right->parent = nast->parent;
+
+        nast->left = r->left;
+        nast->right = r->right;
+        nast->parent = r->parent;
+        if(r->parent->left == r) r->parent->left = nast;
+        else r->parent->right = nast;
+
+        delete r;
+        return;
+
+    }
+}
+
+void rightRotation(Node * r)
+{
+    if(!r) return;
+    if(!r->left) return;
+    Node * LC = r->left;
+    Node * RC = r->left->right;
+
+    LC->parent = r->parent;
+    if(r->parent)
+    {
+        if(r->parent->left == r) r->parent->left = LC;
+        else r->parent->right = LC;
+    }
+    LC->right = r;
+    r->parent = LC;
+    r->left = RC;
+    if(RC) RC->parent = r;
+}
+
+void leftRotation(Node * r)
+{
+    if(!r) return;
+    if(!r->right) return;
+    Node * LC = r->right;
+    Node * RC = r->right->left;
+
+    LC->parent = r->parent;
+    if(r->parent)
+    {
+        if(r->parent->right == r) r->parent->right = LC;
+        else r->parent->left = LC;
+    }
+    LC->left = r;
+    r->parent = LC;
+    r->right = RC;
+    if(RC) RC->parent = r;
+}
+
+void dsw(Node *& root)
+{
+    if(abs(wysokosc(root->left) - wysokosc(root->right)) <= 1) return;
+
+    Node * FakeRoot = new Node ();
+    FakeRoot->right = root;
+    Node * tmp = FakeRoot;
+    root->parent = FakeRoot;
+    while(tmp->right)
+    {
+        while(tmp->right->left)
+        {
+            rightRotation(tmp->right);
+        }
+        tmp = tmp->right;
+    }
+
+    tmp = FakeRoot;
+    Node * tmp2 = FakeRoot;
+
+    while(abs(wysokosc(tmp->left) - wysokosc(tmp->right)) > 1)
+    {
+        tmp = tmp2;
+        while(tmp)
+        {
+            leftRotation(tmp->right);
+            tmp = tmp->right;
+        }
+        tmp = tmp2->right;
+    }
+    root = FakeRoot->right;
 }
 
 void wypisz(Node * current, int l)
 {
      if(current != nullptr)
      {
-         wypisz(current->right, l+3);
+         wypisz(current->right, l+2);
          for(int i = 1; i <= l; i++)
          {
-             cout<<"   ";
+             cout<<"  ";
          }
          cout<<current->key<<endl;
-         wypisz(current->left, l+3);
+         wypisz(current->left, l+2);
      }
 }
 
@@ -151,15 +224,20 @@ Node * serchElement(Node * r,int numb)
 }
 
 
+
+
 int main()
 {
+    srand(time(0));
+
 	Node* root = NULL;
-	int tab[9] = { 8,4,9,10,3,5,6,2,7};
-	for (int i = 0; i < 9; i++)
+	int size = 15;
+	int tab[size]/* = {15, 30, 25, 7, 5, 10, 20, 28, 40, 35, 45}*/;
+	for (int i = 0; i < size; i++)
 	{
-		Add(root, tab[i], nullptr);
+		Add(root, rand()%30+1/*tab[i]*/, nullptr);
 	}
-	printInOrder(root);
+	/*printInOrder(root);
     cout<<endl<<"to sekwencijnie"<<endl;
     Node * tmp = minElement(root);
     while(tmp)
@@ -167,21 +245,26 @@ int main()
         cout<<tmp->key;
         tmp = nastepnik(tmp);
         if(tmp!= nullptr) cout<<" -- ";
-    }
-    cout<<endl;
+    }*/
+
+    /*cout<<endl;
     cout<<endl;
     cout<<endl;
     wypisz(root, 0);
+    cout<<endl;
+    cout<<endl;
+    cout<<endl;*/
+    wypisz(root, 0);
+
     cout<<endl<<"*********************************************"<<endl;
-    cout<<endl;
-    cout<<endl;
-    cout<<endl;
-
-    Node * el = serchElement(root, 3);
-
-    deleteElement(el);
+    //Node * el = serchElement(root, 10);
+    //leftRotation(root->right);
+    dsw(root);
+    //leftRotation(root->right);
+    //deleteElement(el);
     wypisz(root, 0);
 
+    //cout<<endl<<"wysokosc = "<<wysokosc(root)<<endl;
 
 	return 0;
 }
