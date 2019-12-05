@@ -98,7 +98,7 @@ int main()
 {
     srand(time(0));
 
-    int s = 2000000;
+    int s = 1000000;
     int *arr1 = new int [s];
     int *arr2 = new int [s];
     int *arr3 = new int [s];
