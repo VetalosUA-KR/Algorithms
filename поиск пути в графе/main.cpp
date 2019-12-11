@@ -5,34 +5,23 @@ using namespace std;
 int main()
 {
 
-    int weight = 0;
+    int arr1[3] = {3,4,2};/// r1
+    int arr2[3] = {2,4,3};/// r2
+    int arr3[3] = {1,3,2};/// cheng
 
-    int arr[10]
+    int sum = 0;
 
-
-
-
-
-    for(int i = 0; i < 10; i++)
+    for(int i = 0; i < 3; i++)
     {
-        for(int j = 0; j < 10; j++)
+        if(arr1[i] < arr2[i]+arr3[i])
         {
-           cout<<arr[i][j]<<" ";
+            sum += arr1[i];
         }
-        cout<<endl;
-    }
-
-
-    for(int i = 0; i < 10; i++)
-    {
-        for(int j = 0; j < 10; j++)
+        else
         {
-            if(arr[i][j])
+            sum += arr2[i]+arr3[i];
         }
     }
-
-
-
 
 
     return 0;
