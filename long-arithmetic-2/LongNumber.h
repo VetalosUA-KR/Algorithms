@@ -34,6 +34,7 @@ private:
     void addFront2(int d);
     void deletAll();
     friend bool helpOperator(LongNumber & left, LongNumber & right);
+    friend void helpOdejmovanie(LongNumber & left, LongNumber & right, LongNumber & newNumber);
 
 public:
     LongNumber(string number, int dig);

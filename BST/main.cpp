@@ -8,26 +8,27 @@ struct Node
 	Node* left;
 	Node* right;
 
-//	void Add(Node * &root,int k);
-//	void printInOrder(Node* root);
+	void Add(Node * &root,int k);
+
+	void printInOrder(Node* root);
 };
 
-void Add(Node*& root, int k,)
+void Add (Node * &root,int k)
 {
-	if (root == NULL)
-	{
+	    if (root == NULL)
+        {
 
-		root = new Node;
-		root->key = k;
-		root->left = NULL;
-		root->right = NULL;
+            root = new Node;
+            root->key = k;
+            root->left = NULL;
+            root->right = NULL;
+        }
+        else
+        {
+            if (root->key > k) Add(root->left, k);
+            else Add(root->right, k);
+        }
 	}
-	else
-	{
-		if (root->key > k) Add(root->left, k);
-		else Add(root->right, k);
-	}
-}
 
 void printInOrder(Node* root)
 {

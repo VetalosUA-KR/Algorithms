@@ -232,38 +232,83 @@ LongNumber LongNumber::operator + (LongNumber& ln)
 
     /// THIS !!!
     if(sign == -1 && ln.sign == -1) newNumber.sign = -1;
-    newNumber.printNumber();
+    //newNumber.printNumber();
     return newNumber;
 }
 
 LongNumber LongNumber::operator-(LongNumber& ln2)
 {
-    LongNumber ln = ln2;
+    LongNumber right = ln2;
     LongNumber left = *this;
 
     LongNumber newNumber;
-    Node * tmpUp;
-    Node * tmpDown;
-    if(*this > ln)
+    Node * tmpUp = left.tail;
+    Node * tmpDown = right.tail;
+    ///if left is negative and right is positive
+    if(left.sign == -1 && right.sign != -1)
     {
-        tmpUp = left.tail;
-        tmpDown = ln.tail;
-        //cout<<"levoe bolshe";
-    }
-    else if (*this < ln)
-    {
-        tmpUp = ln.tail;
-        tmpDown = left.tail;
+        newNumber = right + left;
         newNumber.sign = -1;
-        //cout<<"pravoe bolshe";
+        return newNumber;
+    }
+    ///if right is negative and left is positive
+    if(right.sign == -1 && left.sign != -1)
+    {
+        newNumber = right + left;
+        newNumber.sign = 1;
+        return newNumber;
+    }
+    ///if both numbers is negative
+    if(left.sign == -1 && right.sign == -1)
+    {
+        if(left == right)
+        {
+            newNumber.addFront(0);
+            newNumber.sign = 1;
+        }
+        if(left > right)
+        {
+
+            left.sign = 1;
+            right.sign = 1;
+            helpOdejmovanie(right, left, newNumber);
+            newNumber.sign = 1;
+        }
+        else
+        {
+            left.sign = 1;
+            right.sign = 1;
+            helpOdejmovanie(left, right, newNumber);
+            newNumber.sign = -1;
+        }
     }
     else
     {
-        newNumber.addFront(0);
-        ///newNumber.printNumber();
-        return newNumber;
+        if(left > right)
+        {
+            helpOdejmovanie(left, right, newNumber);
+            cout<<"levoe bolshe";
+        }
+        else if (left < right)
+        {
+            helpOdejmovanie(right, left, newNumber);
+            newNumber.sign = -1;
+            cout<<"pravoe bolshe";
+        }
+        else
+        {
+            newNumber.addFront(0);
+            //newNumber.printNumber();
+            return newNumber;
+        }
     }
+    return newNumber;
+}
 
+void helpOdejmovanie(LongNumber & left, LongNumber & right, LongNumber & newNumber)
+{
+    LongNumber::Node * tmpUp = left.tail;
+    LongNumber::Node * tmpDown = right.tail;
     while(tmpUp && tmpDown)
     {
         if(tmpUp->data - tmpDown->data >= 0)
@@ -279,8 +324,7 @@ LongNumber LongNumber::operator-(LongNumber& ln2)
             }
             else
             {
-
-                Node * prev = tmpUp->previous;
+                LongNumber::Node * prev = tmpUp->previous;
                 while(prev->data == 0)
                 {
                     prev->data = 9;
@@ -295,26 +339,20 @@ LongNumber LongNumber::operator-(LongNumber& ln2)
         tmpUp = tmpUp->previous;
         tmpDown = tmpDown->previous;
     }
-
     /// adding remaining numbers
     while(tmpUp)
     {
         newNumber.addFront(tmpUp->data);
         tmpUp = tmpUp->previous;
     }
-
     ///dele all left's 0
     while(newNumber.head->data == 0)
     {
-        Node * toDelte = newNumber.head;
+        LongNumber::Node * toDelte = newNumber.head;
         newNumber.head = newNumber.head->next;
         delete toDelte;
     }
-
-    newNumber.printNumber();
-    return newNumber;
 }
-
 
 ostream & operator<<(ostream& os, LongNumber & ln)
 {

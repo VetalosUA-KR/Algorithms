@@ -6,12 +6,19 @@ using namespace std;
 int main()
 {
 
-    LongNumber n1("-193",10);
-    LongNumber n2("4", 10);
+    LongNumber n1("10",10);
+    LongNumber n2("-15", 10);
     //cout<<n1<<" > "<<n2<<"  ==  "<<(n1 > n2)<<endl;
     //cout<<n1<<" < "<<n2<<"  ==  "<<(n1 < n2)<<endl;
+    LongNumber n3;
 
-    cout<<n1<<" + "<<n2<<" = ";n1 + n2;
+    cout<<"n1 = "<<n1<<endl;
+    cout<<"n2 = "<<n2<<endl;
+
+    cout<<n1<<" - "<<n2<<" = "; n3 = n1 - n2; cout<<n3<<endl;
+
+    cout<<"n1 = "<<n1<<endl;
+    cout<<"n2 = "<<n2<<endl;
 
     return 0;
 }
