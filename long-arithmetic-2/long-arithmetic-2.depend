@@ -1,5 +1,5 @@
 # depslib dependency file v1.0
-1576175999 source:d:\УЧЁБА\Алгоритмы\long-arithmetic-2\longnumber.cpp
+1577443414 source:d:\УЧЁБА\Алгоритмы\long-arithmetic-2\longnumber.cpp
 	"LongNumber.h"
 	<iostream>
 	<cstring>
@@ -10,7 +10,7 @@
 	<string>
 	<cstring>
 
-1576175990 source:d:\УЧЁБА\Алгоритмы\long-arithmetic-2\main.cpp
+1577443473 source:d:\УЧЁБА\Алгоритмы\long-arithmetic-2\main.cpp
 	<iostream>
 	"LongNumber.h"
 

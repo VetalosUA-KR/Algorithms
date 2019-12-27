@@ -202,9 +202,7 @@ bool LongNumber::operator==(LongNumber& ln)
     else return false;
 }
 
-/**
-change, if some number is negative
-*/
+
 LongNumber LongNumber::operator + (LongNumber& ln)
 {
     LongNumber newNumber;
@@ -230,8 +228,25 @@ LongNumber LongNumber::operator + (LongNumber& ln)
         newNumber.head = newNumber.head->previous;
     }
 
-    /// THIS !!!
-    if(sign == -1 && ln.sign == -1) newNumber.sign = -1;
+    LongNumber left = *this;
+    LongNumber right = ln;
+    if(left.sign == -1 || right.sign == -1)
+    {
+        if(left > right)
+        {
+            right.sign = 1;
+            newNumber = right - left;
+            if(right > left) newNumber.sign = -1;
+            else newNumber.sign = 1;
+        }
+        else
+        {
+            left.sign = 1;
+            newNumber = left - right;
+            if(left > right) newNumber.sign = -1;
+            else newNumber.sign = 1;
+        }
+    }
     //newNumber.printNumber();
     return newNumber;
 }
@@ -284,23 +299,26 @@ LongNumber LongNumber::operator-(LongNumber& ln2)
     }
     else
     {
-        if(left > right)
+        newNumber = left + right;
+        newNumber.sign = -1;
+       /* if(left > right)
         {
             helpOdejmovanie(left, right, newNumber);
-            cout<<"levoe bolshe";
+            //cout<<"levoe bolshe";
         }
         else if (left < right)
         {
             helpOdejmovanie(right, left, newNumber);
             newNumber.sign = -1;
-            cout<<"pravoe bolshe";
+            //cout<<"pravoe bolshe";
         }
         else
         {
             newNumber.addFront(0);
             //newNumber.printNumber();
             return newNumber;
-        }
+        }*/
+
     }
     return newNumber;
 }
