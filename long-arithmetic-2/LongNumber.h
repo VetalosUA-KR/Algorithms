@@ -50,8 +50,12 @@ public:
 
     LongNumber operator + (LongNumber & ln);
     LongNumber operator - (LongNumber & ln);
+    LongNumber operator * (LongNumber & ln);
+    LongNumber operator / (LongNumber & ln);
+    LongNumber& operator ++ (int);
 
     friend ostream & operator<<(ostream& os, LongNumber & ln);
+    friend istream & operator>>(istream& is, LongNumber & ln);
 
 
 };

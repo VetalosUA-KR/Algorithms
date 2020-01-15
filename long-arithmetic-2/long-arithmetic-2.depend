@@ -1,16 +1,16 @@
 # depslib dependency file v1.0
-1577443414 source:d:\УЧЁБА\Алгоритмы\long-arithmetic-2\longnumber.cpp
+1578220677 source:d:\УЧЁБА\Алгоритмы\long-arithmetic-2\longnumber.cpp
 	"LongNumber.h"
 	<iostream>
 	<cstring>
 	<string>
 
-1576174842 d:\УЧЁБА\Алгоритмы\long-arithmetic-2\longnumber.h
+1578218094 d:\УЧЁБА\Алгоритмы\long-arithmetic-2\longnumber.h
 	<iostream>
 	<string>
 	<cstring>
 
-1577443473 source:d:\УЧЁБА\Алгоритмы\long-arithmetic-2\main.cpp
+1578219752 source:d:\УЧЁБА\Алгоритмы\long-arithmetic-2\main.cpp
 	<iostream>
 	"LongNumber.h"
 

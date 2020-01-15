@@ -39,7 +39,6 @@ void LongNumber::addFront(int d)
     {
         if(head->previous != nullptr)
         {
-            //cout<<"IN"<<"old number = "<<head->data<<"\t new number = "<<d<<endl;
             head->previous->data += d;
             head = head->previous;
         }
@@ -50,6 +49,7 @@ void LongNumber::addFront(int d)
             head = newElement;
         }
     }
+    size++;
 }
 
 
@@ -58,7 +58,7 @@ void LongNumber::addFront2(int d)
     Node * newElement = new Node(d);
     head->previous = newElement;
     newElement->next = head;
-    //head = newElement;
+    size++;
 }
 
 
@@ -202,6 +202,118 @@ bool LongNumber::operator==(LongNumber& ln)
     else return false;
 }
 
+LongNumber LongNumber::operator*(LongNumber& ln)
+{
+    LongNumber newNumber;
+    newNumber.addFront(0);
+
+    LongNumber osnovnoe;
+    Node * tmpUp = tail;
+    Node * tmpDown = ln.tail;
+
+    osnovnoe = (*this > ln) ? *this : ln;
+    if(*this > ln)
+    {
+        osnovnoe = ln;
+        tmpUp = tail;
+        tmpDown = ln.tail;
+    }
+    else
+    {
+        osnovnoe = *this;
+        tmpUp = ln.tail;
+        tmpDown = tail;
+    }
+    LongNumber helpArr[osnovnoe.size];
+
+
+    for(int i = 0; i < osnovnoe.size; i++)
+    {
+        LongNumber tmp;
+        for(int j = 0; j < i; j++)
+        {
+            tmp.addFront(0);
+        }
+        Node * _tmpUp = tmpUp;
+        while(_tmpUp)
+        {
+            int upNumber = (_tmpUp != nullptr) ? _tmpUp->data : 0;
+            int downNumber = (tmpDown != nullptr) ? tmpDown->data : 0;
+            int mod = (upNumber * downNumber) / ln.digit;
+            tmp.addFront((upNumber * downNumber) % ln.digit);
+            if(mod > 0)
+            {
+                tmp.addFront2(mod);
+            }
+            if(_tmpUp)_tmpUp = _tmpUp->previous;
+        }
+        if(tmpDown)tmpDown = tmpDown->previous;
+
+        while(tmp.head->previous != nullptr)
+        {
+            tmp.head = tmp.head->previous;
+        }
+        helpArr[i] = tmp;
+    }
+
+    for(int i = 0; i < osnovnoe.size; i++)
+    {
+        newNumber = newNumber + helpArr[i];
+    }
+    if(sign == -1 ^ ln.sign == -1) newNumber.sign = -1;
+    else newNumber.sign = 1;
+    return newNumber;
+}
+
+LongNumber LongNumber::operator/(LongNumber& ln)
+{
+    LongNumber tmpLessNumber;
+    LongNumber tmpLongNumber;
+    if(*this > ln)
+    {
+        tmpLessNumber = ln;
+        tmpLongNumber = *this;
+    }
+    else
+    {
+        tmpLessNumber = *this;
+        tmpLongNumber = ln;
+    }
+
+
+    LongNumber divider("1", 10);
+
+    LongNumber tmp = tmpLessNumber;
+    while(tmpLongNumber > tmp)
+    {
+        divider++;
+        tmp = tmp + tmpLessNumber;
+    }
+    return divider;
+}
+
+LongNumber& LongNumber::operator++(int)
+{
+    Node * tmp = tail;
+    int tmpNumer = tmp->data;
+    while(tmpNumer++ >= digit-1)
+    {
+        if(tmp->previous)
+        {
+            tmp->data = 0;
+            tmp = tmp->previous;
+            tmpNumer = tmp->data;
+        }
+        else
+        {
+            addFront(0);
+            tmp->data = 0;
+        }
+    }
+    tmp->data++;
+    return *this;
+}
+
 
 LongNumber LongNumber::operator + (LongNumber& ln)
 {
@@ -247,7 +359,6 @@ LongNumber LongNumber::operator + (LongNumber& ln)
             else newNumber.sign = 1;
         }
     }
-    //newNumber.printNumber();
     return newNumber;
 }
 
@@ -301,24 +412,6 @@ LongNumber LongNumber::operator-(LongNumber& ln2)
     {
         newNumber = left + right;
         newNumber.sign = -1;
-       /* if(left > right)
-        {
-            helpOdejmovanie(left, right, newNumber);
-            //cout<<"levoe bolshe";
-        }
-        else if (left < right)
-        {
-            helpOdejmovanie(right, left, newNumber);
-            newNumber.sign = -1;
-            //cout<<"pravoe bolshe";
-        }
-        else
-        {
-            newNumber.addFront(0);
-            //newNumber.printNumber();
-            return newNumber;
-        }*/
-
     }
     return newNumber;
 }
@@ -377,6 +470,22 @@ ostream & operator<<(ostream& os, LongNumber & ln)
     ln.printNumber();
     return os;
 }
+
+istream & operator>>(istream& is, LongNumber & ln)
+{
+    cout<<"podaj liczbu -> ";
+    string licz;
+    int digit;
+
+    is>>licz;
+    cout<<"podaj rozriad -> ";
+    is>>digit;
+    LongNumber newNumber(licz, digit);
+    ln = newNumber;
+    return is;
+}
+
+
 
 void LongNumber::printNumber()
 {
