@@ -60,7 +60,7 @@ int main()
 	int tab[] = { 8,4,9,10,3,4,6,2,7};
 	for (int i = 0; i < 9; i++)
 	{
-		Add(root, tab[i], nullptr);
+		Add(root, tab[i]);
 	}
 	printInOrder(root);
     cout<<endl<<"to sekwencijnie"<<endl;

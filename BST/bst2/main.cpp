@@ -1,5 +1,7 @@
 #include <iostream>
 #include <ctime>
+#include <cmath>
+#include <fstream>
 
 using namespace std;
 
@@ -34,6 +36,7 @@ Node * Add(Node*& r, int k, Node * par)
 	}
 }
 
+
 void printInOrder(Node* root)
 {
 	if (!root) return;
@@ -41,6 +44,8 @@ void printInOrder(Node* root)
 	cout << root->key << " ";
 	printInOrder(root->right);
 }
+
+
 
 Node * minElement(Node * r)
 {
@@ -225,46 +230,43 @@ Node * serchElement(Node * r,int numb)
 
 
 
-
 int main()
 {
     srand(time(0));
 
 	Node* root = NULL;
-	int size = 15;
-	int tab[size]/* = {15, 30, 25, 7, 5, 10, 20, 28, 40, 35, 45}*/;
-	for (int i = 0; i < size; i++)
-	{
-		Add(root, rand()%30+1/*tab[i]*/, nullptr);
-	}
-	/*printInOrder(root);
-    cout<<endl<<"to sekwencijnie"<<endl;
-    Node * tmp = minElement(root);
-    while(tmp)
+
+	ofstream out;          // поток для записи
+
+    out.open("0-1.txt"); // окрываем файл для записи
+
+    out << "0 - MAX" <<endl;
+
+
+    for(int j = 100; j <= 10000; j += 100)
     {
-        cout<<tmp->key;
-        tmp = nastepnik(tmp);
-        if(tmp!= nullptr) cout<<" -- ";
-    }*/
+        for (int i = 0; i <= j; i++)
+        {
+            Add(root, rand()%2, nullptr);
+        }
+        out<<j<<" "<<wysokosc(root)<<endl;
+        root = nullptr;
+    }
 
-    /*cout<<endl;
-    cout<<endl;
-    cout<<endl;
-    wypisz(root, 0);
-    cout<<endl;
-    cout<<endl;
-    cout<<endl;*/
-    wypisz(root, 0);
 
-    cout<<endl<<"*********************************************"<<endl;
-    //Node * el = serchElement(root, 10);
-    //leftRotation(root->right);
-    dsw(root);
-    //leftRotation(root->right);
-    //deleteElement(el);
-    wypisz(root, 0);
 
-    //cout<<endl<<"wysokosc = "<<wysokosc(root)<<endl;
+
+	/**Add(root, 10, nullptr);
+	Add(root, 8, nullptr);
+	Add(root, 15, nullptr);
+	Add(root, 5, nullptr);
+	Add(root, 9, nullptr);
+	Add(root, 11, nullptr);
+	Add(root, 13, nullptr);
+	Add(root, 12, nullptr);*/
+
+	//wypisz(root, 1);
+
 
 	return 0;
 }
