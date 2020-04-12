@@ -1,0 +1,21 @@
+void insert (T *&data)
+    {
+        int hashNumber = hash(data->name);
+        //Person *pers = new Person(name, surname, age);
+        //T *element = table[hashNumber]->value;
+        if (table[hashNumber]->key == "free")
+        {
+            table[hashNumber]->value = *data;
+            table[hashNumber]->key = "busy";
+            return;
+        }
+
+        int index = hashNumber+1;
+        while(index < HASH_TABLE_SIZE && table[index]->key != "free")
+        {
+            index++;
+        }
+
+        table[index]->value = *data;
+        table[index]->key = "busy";
+    }

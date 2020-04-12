@@ -1,0 +1,270 @@
+#include <iostream>
+#include <string>
+#include <cstring>
+#include <cstddef>
+#include <cmath>
+
+
+/// example hash-table (OPEN_ADDRESSING)
+//#define HASH_TABLE_SIZE 50
+
+//const int HASH_TABLE_SIZE = 50;
+
+using namespace std;
+
+class Person // test class
+{
+public:
+    string name;
+    string surname;
+    int age;
+
+    Person()
+    {
+        this->name = "null";
+        this->surname = "null";
+        this->age = 0;
+    }
+
+    Person (string name, string surname, int age = 0)
+    {
+        this->name = name;
+        this->surname = surname;
+        this->age = age;
+    }
+
+};
+
+template<typename T>
+class HashTable
+{
+    struct Node
+    {
+        T value;
+        string key = "free";
+    };
+
+
+public:
+    unsigned long int hashTableBusy = 0;
+
+    unsigned long int HASH_TABLE_SIZE;
+    Node *table;
+    HashTable(unsigned long int hts)
+    {
+        //cout<<"konstruktor"<<endl;
+        HASH_TABLE_SIZE = hts;
+        table = new Node[HASH_TABLE_SIZE];
+        for ( int i = 0; i < HASH_TABLE_SIZE; i++ )
+        {
+            table[i] = Node();
+        }
+    }
+    //Node *table = new Node[HASH_TABLE_SIZE];
+    ~HashTable()
+    {
+        //delete table;
+        /*for ( int i = 0; i < HASH_TABLE_SIZE; i++ )
+        {
+            delete table[i];
+        }*/
+    }
+    void print()
+    {
+        cout<<endl;
+        for(int i = 0; i < HASH_TABLE_SIZE; i++)
+        {
+            cout<<table[i].key<<" [ "<<table[i].value.name<<" ]"<<endl;
+        }
+    }
+
+    /// add element
+    void insert (T *data, unsigned long(*hashMetod)(string k, int p, unsigned long size_H))
+    {
+        unsigned long hashNumber = hashMetod(data->name, 1, HASH_TABLE_SIZE);
+        if (table[hashNumber].key == "free")
+        {
+            table[hashNumber].value = *data;
+            table[hashNumber].key = "busy";
+            hashTableBusy++;
+            return;
+        }
+
+        int proba = 1;
+        while(hashNumber < HASH_TABLE_SIZE && table[hashNumber].key == "busy")
+        {
+            hashNumber = hashMetod(data->name, proba, HASH_TABLE_SIZE);
+            proba++;
+        }
+        table[hashNumber].value = *data;
+        table[hashNumber].key = "busy";
+        hashTableBusy++;
+    }
+    /// Find element by name
+    T find ( string name, unsigned long(*hashMetod)(string key, int proba, unsigned long size_H))
+    {
+        unsigned long hashNumber = hashMetod (name, 1, HASH_TABLE_SIZE);
+        Person result = table[hashNumber].value;
+        if(table[hashNumber].value.name == name)
+        {
+            return result;
+        }
+
+        int proba = 1;
+        while(hashNumber < HASH_TABLE_SIZE && table[hashNumber].key == "busy" && table[hashNumber].value.name != name)
+        {
+            hashNumber = hashMetod(name, proba, HASH_TABLE_SIZE);
+            proba++;
+        }
+        result = table[hashNumber].value;
+        try
+        {
+            if (result.name != name)
+            {
+                throw 1;
+            }
+            return result;
+        }
+        catch(int i)
+        {
+            cout << "Error - " << i << " not found person!!!!" << endl;
+            return Person("NULL","NULL",0);
+        }
+    }
+    /// Delete element by name
+                     //( string name, unsigned long(*hashMetod)(string key, int proba, unsigned long size_H))
+    void deleteElement ( string name, unsigned long(*hashMetod)(string key, int proba, unsigned long size_H))
+    {
+        unsigned long hashNumber = hashMetod (name, 1, HASH_TABLE_SIZE);
+        Person result = table[hashNumber].value;
+        if(table[hashNumber].value.name == name)
+        {
+            table[hashNumber].key = "free";
+            hashTableBusy--;
+            return;
+        }
+
+        int proba = 2;
+        while(hashNumber < HASH_TABLE_SIZE && table[hashNumber].key == "busy" && table[hashNumber].value.name != name)
+        {
+            hashNumber = hashMetod(name, proba, HASH_TABLE_SIZE);
+            proba++;
+        }
+        result = table[hashNumber].value;
+
+        try
+        {
+            if (result.name != name)
+            {
+                throw 1;
+            }
+            table[hashNumber].key = "free";
+            hashTableBusy--;
+            return;
+        }
+        catch(int i)
+        {
+            cout << "Error - " << i << " not found person!!!!" << endl;
+            //return Person("NULL","NULL",0);
+        }
+    }
+};
+
+unsigned long int hash_djb2(string str, unsigned long size_H)
+{
+    unsigned long int hash;
+    int c;
+    hash = 5381;
+    for(auto x: str)
+    {
+        c = x;
+        hash = ((hash << 5) + hash) + c;
+    }
+    return (hash % size_H);
+}
+
+unsigned long hashModul ( string str, unsigned long size_H )
+{
+    const int p = 31;
+    long long hash_number = 0;
+    long long p_pow = 1;
+    for(size_t i = 0; i < str.length(); i++)
+    {
+        hash_number += (str[i] - 'a'+1) * p_pow;
+        p_pow *= p;
+    }
+    return hash_number % size_H;
+}
+
+unsigned long hashLine(string str, int proba, unsigned long size_H)
+{
+    unsigned long hash_number = hashModul(str, size_H)+proba;
+    return hash_number % size_H;
+}
+unsigned long hashQuadratic(string str, int proba, unsigned long size_H)
+{
+    unsigned long hash_number = (hashModul(str, size_H)+ 3*proba + 2*pow(proba,2));
+    return hash_number % size_H;
+}
+unsigned long hashDouble(string str, int proba, unsigned long size_H)
+{
+    unsigned long hash_number = hashModul(str, size_H) + proba*hash_djb2(str,size_H-proba);
+    return hash_number % size_H;
+}
+
+/// other functions
+string randString(int min, int max)
+{
+    string str;
+    int ran = min + rand() % (max - min);
+    for(int i = 0; i < ran; i++)
+    {
+        str += char(rand() % 25 +97);
+    }
+    return str;
+}
+///
+
+int main()
+{
+    HashTable<Person> newTable(50);
+
+    Person *p1 = new Person("Artyom", "Devyatov", 20);
+    Person *p2 = new Person("Vasya", "Petrov", 23);
+    Person *p3 = new Person("Ilja", "Saveljev", 28);
+    Person *p4 = new Person("Ilaj", "Savanna", 43);
+    Person *p5 = new Person("Dmitry", "Kuzychev", 31);
+
+    newTable.insert(p1, hashQuadratic);
+    newTable.insert(p2, hashQuadratic);
+    newTable.insert(p3, hashQuadratic);
+    newTable.insert(p4, hashQuadratic); // have collisions  with Ilja
+    newTable.insert(p5, hashQuadratic);
+
+
+    Person search = newTable.find("Ilaj", hashQuadratic);
+    //newTable.deleteElement("Artyom", hashQuadratic);
+//    newTable.deleteElement("Artyom")
+
+    cout<<search.surname<<"\t"<<search.name<<"\t"<<search.age;
+    newTable.print();
+
+    //HASH_TABLE_SIZE = 100;
+
+
+    return 0;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+

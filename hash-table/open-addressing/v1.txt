@@ -1,0 +1,168 @@
+#include <iostream>
+#include <string>
+#include <cstring>
+#include <cstddef>
+
+/// example hash-table (open-addressing)
+
+#define HASH_TABLE_SIZE 10
+
+using namespace std;
+
+
+
+class Person // test class
+{
+public:
+    Person *next;
+    string name;
+    string surname;
+    int age;
+
+    Person()
+    {
+        this->name = "null";
+        this->surname = "null";
+        this->age = 0;
+        this->next = NULL;
+    }
+
+    Person (string name, string surname, int age = 0)
+    {
+        this->name = name;
+        this->surname = surname;
+        this->age = age;
+        this->next = NULL;
+    }
+
+    ~Person()
+    {
+        if ( this->next != NULL )
+        {
+            delete this->next;
+        }
+    }
+};
+
+template<typename T>
+class HashTable
+{
+    struct Node
+    {
+        T value;
+        string key = "free";
+    };
+    int hash ( string str )
+    {
+        const int p = 31;
+        long long hash_number = 0;
+        long long p_pow = 1;
+        for(size_t i = 0; i < str.length(); i++)
+        {
+            hash_number += (str[i] - 'a'+1) * p_pow;
+            p_pow *= p;
+        }
+        return hash_number % HASH_TABLE_SIZE;
+    }
+
+public:
+
+    Node *table[HASH_TABLE_SIZE];
+    //Person p;
+//    cout<<"test";
+
+    HashTable()
+    {
+        for ( int i = 0; i < HASH_TABLE_SIZE; i++ )
+        {
+            table[i] = new Node();
+            //table[i]->key = "free";
+            //cout<<table[i]->key<<endl;
+            //table[i]->key = "free";
+        }
+    }
+
+    ~HashTable()
+    {
+        /*for ( int i = 0; i < HASH_TABLE_SIZE; i++ )
+        {
+            delete table[i]->value;
+        }*/
+    }
+
+    // add element
+    void insert (/* string name, string surname, int age */ T *data)
+    {
+        int hashNumber = hash(data->name);
+        //cout<<"HN = "<<hashNumber<<"\t"<<endl;
+        //Person *pers = new Person(name, surname, age);
+        //T *element = table[hashNumber]->value;
+        if (table[hashNumber]->key == "free")
+        {
+            table[hashNumber]->value = *data;
+            table[hashNumber]->key = "busy";
+            return;
+        }
+        int index = hashNumber;
+        while(index < HASH_TABLE_SIZE && table[index]->key == "busy")
+        {
+            index++;
+        }
+        table[index]->value = *data;
+        table[index]->key = "busy";
+    }
+
+    // Find element by name
+    T find ( string name )
+    {
+        int hashNumber = hash ( name );
+        Person result = table[hashNumber]->value;
+        if(table[hashNumber]->value.name == name)
+        {
+            return result;
+        }
+
+        int index = hashNumber+1;
+        while(index < HASH_TABLE_SIZE && table[index]->key != "busy")
+        {
+            index++;
+        }
+        result = table[index]->value;
+        return result;
+    }
+};
+
+int main()
+{
+    HashTable<Person> newTable;
+
+    Person *p1 = new Person("Artyom", "Devyatov", 20);
+    Person *p2 = new Person("Vasya", "Petrov", 23);
+    Person *p3 = new Person("Ilja", "Saveljev", 28);
+    Person *p4 = new Person("Ilaj", "Savanna", 43);
+    Person *p5 = new Person("Dmitry", "Kuzychev", 31);
+
+    newTable.insert(p1);
+    newTable.insert(p2);
+    newTable.insert(p3);
+    newTable.insert(p4); // have collisions  with Ilja
+    newTable.insert(p5);
+
+    for(int i = 0; i < HASH_TABLE_SIZE; i++)
+    {
+        cout<<newTable.table[i]->value.name<<"\t"<<newTable.table[i]->value.surname<<"\t";
+        cout<<newTable.table[i]->key<<endl;
+    }
+
+    Person search = newTable.find("Vasya");
+
+    //cout<<search.surname<<"\t"<<search.name<<"\t"<<search.age;
+    /*if ( search )
+    {
+        cout<<"tete"<<endl;
+        cout << search->surname << endl;
+    }*/
+
+    return 0;
+}
+
