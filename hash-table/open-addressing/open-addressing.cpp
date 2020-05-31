@@ -3,12 +3,16 @@
 #include <cstring>
 #include <cstddef>
 #include <cmath>
+#include <windows.h>
+#include <ctime>
 
-
-/// example hash-table (OPEN_ADDRESSING)
 using namespace std;
 
-unsigned long hashLine(string str, int proba, unsigned long size_H);
+void SetColor(int text, int background)
+{
+   HANDLE hStdOut = GetStdHandle(STD_OUTPUT_HANDLE);
+   SetConsoleTextAttribute(hStdOut, (WORD)((background << 4) | text));
+}
 
 class Person // test class
 {
@@ -71,7 +75,6 @@ public:
     Node *table;
     HashTable(unsigned long int hts)
     {
-        cout<<"konstruktor"<<endl;
         HASH_TABLE_SIZE = hts;
         table = new Node[HASH_TABLE_SIZE];
         for ( int i = 0; i < HASH_TABLE_SIZE; i++ )
@@ -89,7 +92,9 @@ public:
         }
     }
     /**
-    Tutaj uzyto inne metoda do wstawienia elementow, dlatego ze, przy uzyciu zwyklej metody my uzywamy wskaznik na metodu haszowania (liniowa/kwadratowa/podwojne)
+    operator = wykonuje funkcji przehaszowania, jesli wspolczynik tablicy jest wiekszy od 0.5 to przehaszujemy wszystkie elementy do tablicy o 2 raza wiekszej,
+    jesli wspolczynik mniej od 0.125 to przehaszowujemy do tablicy o 2 raza mniejszej
+    tutaj uzyto inne metoda do wstawienia elementow, dlatego ze, przy uzyciu zwyklej metody my uzywamy wskaznik na metodu haszowania (liniowa/kwadratowa/podwojne)
     tutaj uzywamy metody liniowej
     */
     HashTable & operator = ( HashTable & HT)
@@ -118,7 +123,6 @@ public:
                 this->insert2(&HT.table[i].value);
             }
         }
-
         return *this;
     }
 
@@ -131,7 +135,16 @@ public:
         cout<<endl;
         for(int i = 0; i < HASH_TABLE_SIZE; i++)
         {
-            cout<<table[i].key<<" [ "<<table[i].value.key<<" ]"<<endl;
+            if(table[i].key == "busy")
+            {
+                SetColor(0,4);
+                cout<<table[i].key<<"[ "<<table[i].value.key<<" ]"<<endl;
+            }
+            else
+            {
+                SetColor(0,15);
+                cout<<table[i].key<<"[ "<<table[i].value.key<<" ]"<<endl;
+            }
         }
     }
 
@@ -157,6 +170,7 @@ public:
             table[hashNumber].value = *data;
             table[hashNumber].key = "busy";
             hashTableBusy++;
+            //cout<<"proba = "<<proba<<endl;
         }
     }
     /// Find element by key
@@ -168,7 +182,6 @@ public:
         {
             return result;
         }
-
         int proba = 1;
         while(hashNumber < HASH_TABLE_SIZE && table[hashNumber].key == "busy" && table[hashNumber].value.key != key)
         {
@@ -283,7 +296,7 @@ unsigned long hashQuadratic(string str, int proba, unsigned long size_H)
 }
 unsigned long hashDouble(string str, int proba, unsigned long size_H)
 {
-    unsigned long hash_number = hashModul(str, size_H) + proba*hashModul(str,size_H-proba);
+    unsigned long hash_number = hashModul(str, size_H) + (proba+hashModul(str,size_H - proba));
     return hash_number % size_H;
 }
 
@@ -298,45 +311,72 @@ string randString(int min, int max)
     }
     return str;
 }
-///
-
-
-
+template <typename T>
+int dlugProbkowania(HashTable<T> *ht)
+{
+    int i,c,m;
+    m = 1;
+    c = 1;
+    for(int i = 0; i < ht->HASH_TABLE_SIZE; i++)
+    {
+        if(ht->table[i].key == "busy")
+        {
+            if(ht->table[i].key == ht->table[i+1].key)
+            {
+                c++;
+                if(c>m) m=c;
+            }
+            else c=1;
+        }
+    }
+    return m;
+}
+/// ///////////////////////////////////////////////////////////
 int main()
 {
-    HashTable<Person> newTable(16);
+    // Kod do testowania
+    srand( time(0) );
+    int dlugoscHashTab = 1000;
+    int iloscElementow = 600;
+    int iloscPowtorzen = 100;
 
-    Person *p1 = new Person("Artyom", "Devyatov", 20);
-    Person *p2 = new Person("Vasya", "Petrov", 23);
-    Person *p3 = new Person("Ilja", "Saveljev", 28);
-    Person *p4 = new Person("Ilaj", "Savanna", 43);
-    Person *p5 = new Person("Dmitry", "Kuzychev", 31);
+    unsigned long ((*ptr_func_metod[3]))(string key, int proba, unsigned long size_H);
+    string ptr_func_name[3];
+    ptr_func_metod[0] = hashLine;
+    ptr_func_name[0] = "METODA LINIOWA";
+    ptr_func_metod[1] = hashQuadratic;
+    ptr_func_name[1] = "METODA KWADRATOWA";
+    ptr_func_metod[2] = hashDouble;
+    ptr_func_name[2] = "METODA PODWOJNA";
 
-    newTable.insert(p1, hashLine);
-    newTable.insert(p2, hashLine);
-    newTable.insert(p3, hashLine);
-    newTable.insert(p4, hashLine); // have collisions  with Ilja
-    newTable.insert(p5, hashLine);
+    /*HashTable<Person> newTable(dlugoscHashTab);
 
-    //Person search = newTable.find("Ilaj", hashQuadratic);
+    for(int i = 0; i < 20; i++)
+    {
+        Person *hl = new Person(randString(2,15), "test", 10);
+        newTable.insert(hl, hashLine);
+    }
+    newTable.print();*/
+    for(int f = 0; f < 3; f++)
+    {
+        cout<<endl<<"\t ["<<ptr_func_name[f]<<"]"<<endl<<endl;
+        int sred = 0;
+        int max = 0;
+        int min = 0;
+        for(int i = 0; i < iloscPowtorzen; i++)
+        {
+            HashTable<Person> newTable(dlugoscHashTab);
 
-    cout<<"[OLD]"<<endl;
-    newTable.print();
-    cout<<" [NEW] "<<endl;
-    HashTable<Person> nt;
-
-    nt = newTable;
-
-    Person *p = new Person("Vitalii", "Voitenko", 26);
-    nt.insert(p, hashLine);
-    nt.insert(p, hashLine);
-    nt.insert(p, hashLine);
-    nt.print();
-    ///cout<<newTable.wspHashTable()<<endl;
-
-
-
-
+            for(int j = 0; j < iloscElementow; j++)
+            {
+                Person *hl = new Person(randString(2,15), "test", 10);
+                newTable.insert(hl, ptr_func_metod[f]);
+            }
+            sred += dlugProbkowania(&newTable);
+        }
+        cout<<"srednia dlugos probkowania -> ["<<(sred/iloscPowtorzen)<<"]"<<endl;
+        sred = 0;
+    }
     return 0;
 }
 

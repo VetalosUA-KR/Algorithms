@@ -4,10 +4,9 @@
 #include <cstddef>
 #include <cmath>
 #include <vector>
+#include <ctime>
 
-
-/// example hash-table (OPEN_ADDRESSING)
-#define HASH_TABLE_SIZE 50
+#define HASH_TABLE_SIZE 1000
 
 using namespace std;
 
@@ -42,12 +41,8 @@ class HashTable
         vector<T> List;
         string key = "free";
     };
-
-
-
-    Node *table[HASH_TABLE_SIZE];
-
 public:
+    Node *table[HASH_TABLE_SIZE];
     int hashTableSize = 0;
 
     HashTable()
@@ -143,7 +138,6 @@ public:
         }
     }
 };
-
 /// other functions
 string randString(int min, int max)
 {
@@ -155,51 +149,33 @@ string randString(int min, int max)
     }
     return str;
 }
-///
-
+template <typename T>
+int dlugListy(HashTable<T> *ht)
+{
+    int ma = 0;
+    for(int i = 0; i < 1000; i++)
+    {
+        if(ma < ht->table[i]->List.size())
+        {
+            ma = ht->table[i]->List.size();
+        }
+    }
+    return ma;
+}
+/// /////////////////////////////////////////////////
 int main()
 {
+    /// Kod do testowania
+    srand( time(0) );
     HashTable<Person> newTable;
 
-    /*Person *p1 = new Person("Artyom", "Devyatov", 20);
-    Person *p2 = new Person("Vasya", "Petrov", 23);
-    Person *p3 = new Person("Ilja", "Saveljev", 28);
-    Person *p4 = new Person("Ilaj", "Savanna", 43);
-    Person *p5 = new Person("Dmitry", "Kuzychev", 31);
-
-    newTable.insert(p1);
+    Person * p = new Person("vitalii", "test", 10);
+    Person * p2 = new Person("vetal", "test", 10);
+    newTable.insert(p);
     newTable.insert(p2);
-    newTable.insert(p3);
-    newTable.insert(p4); // have collisions  with Ilja
-    newTable.insert(p5);
-
-
-    Person search = newTable.find("Ilja");
-
     newTable.print();
-    //cout<<search.surname<<"\t"<<search.name<<"\t"<<search.age;*/
 
-    Person *p;
-    for(int i = 0; i < 50; i++)
-    {
-        p = new Person(randString(2,10), "test", 10);
-        newTable.insert(p);
-    }
 
-    newTable.print();
     return 0;
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
 

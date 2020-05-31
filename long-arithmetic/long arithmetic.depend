@@ -23,3 +23,15 @@
 	<iostream>
 	<cstring>
 
+1575837754 source:d:\study\Алгоритмы\long-arithmetic\longnumber.cpp
+	"LongNumber.h"
+	<iostream>
+	<cstring>
+
+1575835720 d:\study\Алгоритмы\long-arithmetic\longnumber.h
+	<iostream>
+
+1575903183 source:d:\study\Алгоритмы\long-arithmetic\main.cpp
+	<iostream>
+	"LongNumber.h"
+

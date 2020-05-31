@@ -35,7 +35,7 @@ struct MyCompare
     }
 };
 
-void print(Node * root, unsigned k=0)
+void print(Node * root, unsigned k=1)
 {
     if(root != nullptr)
     {
@@ -44,8 +44,8 @@ void print(Node * root, unsigned k=0)
         {
             cout<<"   ";
         }
-        if(root->symbol) cout<<root->number<<" ("<<root->symbol<<")"<<endl;
-        else cout<<root->number<<endl;
+        if(root->symbol) cout<<k/3<<" ("<<root->symbol<<")"<<endl;
+        else cout<<k/3<<endl;
         print(root->right, k+3);
     }
 }
@@ -74,7 +74,7 @@ void buildTable(Node *root)
 
 int main ()
 {
-    string s = "hello my name is Vitalii Voitenko, this is test string line";
+    string s = "'nj xnjnj yjdtymrjt ";
     cout<<s<<endl;
 
     map<char, int> m;
@@ -127,6 +127,23 @@ int main ()
         }
         cout<<endl;
     }
+
+    /*ofstream out;
+    out.open("kode.txt");
+    if(out.is_open())
+    {
+        map<char, vector<bool> >::iterator iter;
+        for(iter = table.begin(); iter != table.end(); ++iter)
+        {
+            out<<iter->first<<" ";
+            for(int l = 0; l < iter->second.size(); l++)
+            {
+                out<<iter->second[l];
+            }
+            out<<endl;
+        }
+    }
+    out.close();*/
 
 
     return 0;

@@ -1,0 +1,30 @@
+# depslib dependency file v1.0
+1590873716 source:d:\study\Алгоритмы\graphs\graphs\main.cpp
+	<iostream>
+	"AdjacencyList.h"
+	"Graph.h"
+	"matrix.h"
+	<fstream>
+
+1590873715 d:\study\Алгоритмы\graphs\graphs\adjacencylist.h
+	<fstream>
+	<vector>
+	<iostream>
+	<cmath>
+
+1590659757 d:\study\Алгоритмы\graphs\graphs\kruskal.h
+	<iostream>
+	<vector>
+	<algorithm>
+	<fstream>
+
+1590698362 d:\study\Алгоритмы\graphs\graphs\graph.h
+	<iostream>
+	<vector>
+	<algorithm>
+	<fstream>
+
+1590873757 d:\study\Алгоритмы\graphs\graphs\matrix.h
+	<iostream>
+	<cmath>
+
