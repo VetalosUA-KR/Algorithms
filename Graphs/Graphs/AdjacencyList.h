@@ -64,7 +64,7 @@ public:
         {
             for(int j = 0; j < g[i].size(); j++)
             {
-                float w = sqrt( pow((arr[g[i][j]][0] - arr[i][0]), 2) + pow(cos((arr[i][0]*M_PI)/180.0) * (arr[g[i][j]][1] - arr[i][1]), 2) ) * 4075.704/360;
+                float w = sqrt( pow((arr[g[i][j]][0] - arr[i][0]), 2) + pow(cos((arr[i][0]*M_PI)/180.0) * (arr[g[i][j]][1] - arr[i][1]), 2) ) * 40075.704/360;
                 cout<<i + 1<<" "<<g[i][j]+1<<" "<<w<<"\n";
             }
         }

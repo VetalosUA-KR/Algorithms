@@ -34,8 +34,7 @@ class Matrix
             int x,y;
             float w;
             read>>x>>y>>w;
-            w = round(w*1)/1;
-            cout<<x<<" "<<y<<" "<<w<<endl;
+            w = round(w*10)/10;
             matrix[x-1][y-1] = w;
             matrix[y-1][x-1] = w;
         }

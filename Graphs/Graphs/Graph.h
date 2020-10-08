@@ -5,30 +5,21 @@
 
 using namespace std;
 
-#define edge pair<int,int>
+#define edg pair<int,int>
 class Kruskal
 {
 private:
     class Graph
     {
     private:
-        vector<pair<float, edge>> G; // graph
-        vector<pair<float, edge>> T; // mst
+        vector<pair<float, edg>> G; // graph
+        vector<pair<float, edg>> T; // mst
         int *parent;
         int V; // number of vertices/nodes in graph
     public:
-        /*Graph(int V);
-        void AddWeightedEdge(int u, int v, int w);
-        int find_set(int i);
-        void union_set(int u, int v);
-        void kruskal();
-        void print();*/
         Graph(int V)
         {
             parent = new int[V];
-
-            //i 0 1 2 3 4 5
-            //parent[i] 0 1 2 3 4 5
             for (int i = 0; i < V; i++)
                 parent[i] = i;
 
@@ -37,22 +28,15 @@ private:
         }
         void AddWeightedEdge(int u, int v, float w)
         {
-            G.push_back(make_pair(w, edge(u, v)));
-            //cout<<"u: "<<u<<"\t v: "<<v<<endl;
+            G.push_back(make_pair(w, edg(u, v)));
         }
         int find_set(int i)
         {
-            //cout<<"i: "<<i<<endl;
-            // If i is the parent of itself
             if (i == parent[i])
             {
-                //cout<<"exit I: "<<i<<endl;
                 return i;
             }
             else
-                // Else if i is not the parent of itself
-                // Then i is not the representative of his set,
-                // so we recursively call Find on its parent
                 return find_set(parent[i]);
         }
 
@@ -79,7 +63,6 @@ private:
         {
             ofstream write;
             write.open("src/MST_Adjacencies.txt");
-            //cout << "Edge :" << " Weight" << endl;
             for (int i = 0; i < T.size(); i++)
             {
                 write << T[i].second.first << " " << T[i].second.second << " "
